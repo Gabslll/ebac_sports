@@ -1,43 +1,30 @@
 import { Produto as ProdutoType } from '../App'
-import Produto from '../components/Produto'
-
+import { useGetProdQuery } from '../services/api'
 import * as S from './styles'
 
-type Props = {
-  produtos: ProdutoType[]
-  favoritos: ProdutoType[]
-  adicionarAoCarrinho: (produto: ProdutoType) => void
-  favoritar: (produto: ProdutoType) => void
-}
+import ProdutoComponent from '../components/Produto'
 
-const ProdutosComponent = ({
-  produtos,
-  favoritos,
-  adicionarAoCarrinho,
-  favoritar
-}: Props) => {
-  const produtoEstaNosFavoritos = (produto: ProdutoType) => {
-    const produtoId = produto.id
-    const IdsDosFavoritos = favoritos.map((f) => f.id)
+const Produtos = () => {
+  const { data: produtos, isLoading } = useGetProdQuery();
 
-    return IdsDosFavoritos.includes(produtoId)
+  if (isLoading) {
+    return <h2>Loading...</h2>;
   }
 
   return (
-    <>
-      <S.Produtos>
-        {produtos.map((produto) => (
-          <Produto
-            estaNosFavoritos={produtoEstaNosFavoritos(produto)}
-            key={produto.id}
-            produto={produto}
-            favoritar={favoritar}
-            aoComprar={adicionarAoCarrinho}
-          />
-        ))}
-      </S.Produtos>
-    </>
-  )
+    <S.Produtos>
+      {produtos?.map((produto) => (
+        <ProdutoComponent
+          key={produto.id}
+          produto={produto} aoComprar={function (produto: ProdutoType): void {
+            throw new Error('Function not implemented.')
+          } } favoritar={function (produto: ProdutoType): void {
+            throw new Error('Function not implemented.')
+          } } estaNosFavoritos={false}        />
+      ))}
+    </S.Produtos>
+  );
 }
 
-export default ProdutosComponent
+
+export default Produtos
