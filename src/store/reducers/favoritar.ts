@@ -14,14 +14,22 @@ const favoritarSlice = createSlice({
   name: 'favoritos',
   initialState,
   reducers: {
-    adicionar: (state, action: PayloadAction<Produto>) => {
+    adicionarOuRemover: (state, action: PayloadAction<Produto>) => {
       const fav = action.payload
+      const index = state.itens.findIndex((favorite) => favorite.id === fav.id)
 
-      if (state.itens.find((favorite) => favorite.id === fav.id)) {
-        state.itens.filter((favorite) => favorite.id !== fav.id)
+      if (index !== -1) {
+        // O item já está nos favoritos, então remove
+        state.itens.splice(index, 1)
+        console.log('Removendo dos favoritos:', fav)
       } else {
+        // O item não está nos favoritos, então adiciona
         state.itens.push(fav)
+        console.log('Adicionando aos favoritos:', fav)
       }
     }
   }
 })
+
+export const { adicionarOuRemover } = favoritarSlice.actions
+export default favoritarSlice.reducer
